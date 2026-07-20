@@ -285,6 +285,16 @@ h1 {
     display: flex;
     justify-content: space-between;
     gap: 20px;
+    position: relative;
+}
+.match-svg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
 }
 .match-column {
     flex: 1;
@@ -2272,16 +2282,20 @@ function renderMatch(q, container) {
     const wrap = document.createElement('div');
     wrap.className = 'match-container';
     
-    const colA = document.createElement('div');
-    colA.className = 'match-column';
-    const colB = document.createElement('div');
-    colB.className = 'match-column';
+    const svgOverlay = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svgOverlay.setAttribute("class", "match-svg-overlay");
+    wrap.appendChild(svgOverlay);
+
+    const leftCol = document.createElement('div');
+    leftCol.className = 'match-column';
+    const rightCol = document.createElement('div');
+    rightCol.className = 'match-column';
     
-    let leftItems = shuffleArray(q.pairs.map(p => ({ text: p.left, pairId: p.id, side: 'left' })));
-    let rightItems = shuffleArray(q.pairs.map(p => ({ text: p.right, pairId: p.id, side: 'right' })));
+    let leftItems = shuffleArray(q.pairs.map(p => ({ text: p.left, matchId: p.id, side: 'left' })));
+    let rightItems = shuffleArray(q.pairs.map(p => ({ text: p.right, matchId: p.id, side: 'right' })));
     
     currentQuestionState.selectedItem = null;
-    currentQuestionState.matches = 0;
+    let matchedCount = 0;
     currentQuestionState.totalMatches = q.pairs.length;
     currentQuestionState.elements = [];
     
@@ -2302,11 +2316,45 @@ function renderMatch(q, container) {
             }
             
             // Check match
-            if (prev.item.pairId === item.pairId) {
-                el.classList.add('matched');
-                prev.el.classList.add('matched');
+            if (prev.item.matchId === item.matchId) {
+                el.classList.add('matched', 'correct-reveal');
+                prev.el.classList.add('matched', 'correct-reveal');
+                el.classList.remove('selected');
                 prev.el.classList.remove('selected');
-                currentQuestionState.matches++;
+                matchedCount++;
+                
+                // Draw SVG line
+                const rect1 = el.getBoundingClientRect();
+                const rect2 = prev.el.getBoundingClientRect();
+                const parentRect = svgOverlay.getBoundingClientRect();
+                
+                let x1, y1, x2, y2;
+                if (item.side === 'right') {
+                    x1 = rect2.right - parentRect.left;
+                    y1 = rect2.top + rect2.height / 2 - parentRect.top;
+                    x2 = rect1.left - parentRect.left;
+                    y2 = rect1.top + rect1.height / 2 - parentRect.top;
+                } else {
+                    x1 = rect1.right - parentRect.left;
+                    y1 = rect1.top + rect1.height / 2 - parentRect.top;
+                    x2 = rect2.left - parentRect.left;
+                    y2 = rect2.top + rect2.height / 2 - parentRect.top;
+                }
+                
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", x1);
+                line.setAttribute("y1", y1);
+                line.setAttribute("x2", x2);
+                line.setAttribute("y2", y2);
+                line.setAttribute("stroke", "var(--correct-color)");
+                line.setAttribute("stroke-width", "4");
+                line.setAttribute("stroke-linecap", "round");
+                svgOverlay.appendChild(line);
+                
+                if (matchedCount === q.pairs.length) {
+                    currentQuestionState.isCorrect = true;
+                    enableSolution();
+                }
             } else {
                 el.classList.add('error');
                 prev.el.classList.add('error');
@@ -2317,11 +2365,6 @@ function renderMatch(q, container) {
                 }, 400);
             }
             currentQuestionState.selectedItem = null;
-            
-            if (currentQuestionState.matches === currentQuestionState.totalMatches) {
-                currentQuestionState.isCorrect = true; // For match, full completion is correct
-                enableSolution();
-            }
         }
     };
     
@@ -2330,18 +2373,18 @@ function renderMatch(q, container) {
         el.className = 'match-item';
         el.textContent = item.text;
         el.onclick = () => handleSelect(el, item);
-        colA.appendChild(el);
+        leftCol.appendChild(el);
     });
     rightItems.forEach(item => {
         const el = document.createElement('div');
         el.className = 'match-item';
         el.textContent = item.text;
         el.onclick = () => handleSelect(el, item);
-        colB.appendChild(el);
+        rightCol.appendChild(el);
     });
     
-    wrap.appendChild(colA);
-    wrap.appendChild(colB);
+    wrap.appendChild(leftCol);
+    wrap.appendChild(rightCol);
     container.appendChild(wrap);
     
     // For match, we might want to let them see solution even if they give up

@@ -278,6 +278,16 @@ h1 {
     display: flex;
     justify-content: space-between;
     gap: 20px;
+    position: relative;
+}
+.match-svg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
 }
 .match-column {
     flex: 1;
