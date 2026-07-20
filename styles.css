@@ -1,0 +1,521 @@
+:root {
+    --bg-color: #f4f6f8;
+    --text-color: #333333;
+    --card-bg: #ffffff;
+    --primary-color: #4a90e2;
+    --primary-hover: #357abd;
+    --secondary-color: #7f8c8d;
+    --secondary-hover: #6c7a7d;
+    --correct-color: #2ecc71;
+    --correct-bg: #eafaf1;
+    --incorrect-color: #e74c3c;
+    --incorrect-bg: #fdedec;
+    --border-color: #e0e0e0;
+    --border-dashed: #bdc3c7;
+    --shadow: 0 4px 6px rgba(0,0,0,0.1);
+    
+    /* Subject Colors */
+    --color-science: #27ae60;
+    --color-science-bg: #e9f7ef;
+    --color-english: #e67e22;
+    --color-english-bg: #fdf2e9;
+    
+    --font-main: 'Comic Sans MS', 'Chalkboard SE', 'Fredoka One', sans-serif;
+    --font-heading: 'Comic Sans MS', 'Chalkboard SE', 'Fredoka One', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1e1e1e;
+        --text-color: #f4f6f8;
+        --card-bg: #2d2d2d;
+        --border-color: #444;
+        --border-dashed: #666;
+        --shadow: 0 4px 6px rgba(0,0,0,0.3);
+        --correct-bg: #143321;
+        --incorrect-bg: #3b1715;
+        --color-science-bg: #163623;
+        --color-english-bg: #4a2810;
+    }
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.view {
+    display: none;
+    width: 100%;
+    max-width: 800px;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.view.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-family: var(--font-heading);
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+/* Selector View */
+.subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.subject-card {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px solid transparent;
+}
+
+.subject-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+}
+
+.subject-card.science { border-color: var(--color-science); }
+.subject-card.english { border-color: var(--color-english); }
+
+.subject-card h2 { margin-bottom: 10px; }
+.subject-card p { color: var(--secondary-color); font-size: 0.9rem; margin-bottom: 15px; }
+.subject-card .q-count { font-weight: bold; background: var(--bg-color); padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; }
+
+/* Notebook View */
+.notebook-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--card-bg);
+    padding: 15px 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: var(--font-main);
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:hover { background-color: var(--secondary-hover); }
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: var(--shadow);
+}
+.btn-primary:hover { background-color: var(--primary-hover); transform: scale(1.05); }
+.btn-primary:active { transform: scale(0.95); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#progress-text {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.progress-bar-bg {
+    width: 150px;
+    height: 12px;
+    background-color: var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    width: 0%;
+    transition: width 0.4s ease;
+}
+
+/* Question Container */
+.question-container {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: var(--shadow);
+    border: 2px dashed var(--border-dashed);
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.question-badges {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.badge-type { background-color: #34495e; color: white; }
+.badge-station { background-color: var(--primary-color); color: white; }
+.badge-case { background-color: #9b59b6; color: white; border: 2px solid #8e44ad; }
+
+.question-context {
+    background-color: var(--bg-color);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-style: italic;
+    border-left: 4px solid #9b59b6;
+}
+
+.question-prompt {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Interactions */
+.hidden { display: none !important; }
+
+/* True/False & Multiple Choice */
+.options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.option-btn {
+    background-color: var(--bg-color);
+    border: 2px solid var(--border-color);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-family: var(--font-main);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    color: var(--text-color);
+}
+
+.option-btn:hover:not(:disabled) {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.option-btn.selected {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.option-btn.correct-reveal {
+    background-color: var(--correct-color) !important;
+    border-color: var(--correct-color) !important;
+    color: white !important;
+}
+
+.option-btn.incorrect-reveal {
+    background-color: var(--incorrect-color) !important;
+    border-color: var(--incorrect-color) !important;
+    color: white !important;
+}
+
+/* Match Concepts */
+.match-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+.match-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.match-item {
+    background-color: var(--bg-color);
+    border: 2px solid var(--border-color);
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    user-select: none;
+}
+.match-item.selected {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: white;
+}
+.match-item.matched {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-color);
+    color: var(--text-color);
+    opacity: 0.8;
+    cursor: default;
+}
+.match-item.error {
+    animation: shake 0.4s;
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-color);
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+/* Label Picture */
+.label-picture-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.label-picture-svg-wrapper {
+    position: relative;
+    width: 100%;
+}
+.label-picture-svg-wrapper svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+.label-word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+    justify-content: center;
+}
+.word-chip {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    user-select: none;
+}
+.word-chip.selected {
+    background-color: #f1c40f;
+    color: #333;
+}
+.word-chip.used {
+    opacity: 0.4;
+    cursor: default;
+    background-color: var(--secondary-color);
+}
+.dropzone {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px dashed var(--primary-color);
+    border-radius: 8px;
+    padding: 2px 5px;
+    text-align: center;
+    min-width: 80px;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--text-color);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.dropzone.filled {
+    border-style: solid;
+    background-color: var(--card-bg);
+}
+.dropzone.correct {
+    border-color: var(--correct-color);
+    background-color: var(--correct-bg);
+}
+.dropzone.incorrect {
+    border-color: var(--incorrect-color);
+    background-color: var(--incorrect-bg);
+}
+
+/* Open Question */
+.open-textarea {
+    width: 100%;
+    height: 100px;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    font-family: var(--font-main);
+    font-size: 1rem;
+    resize: vertical;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+.open-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Solution Area */
+.question-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.solution-area {
+    width: 100%;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.solution-area.correct {
+    background-color: var(--correct-bg);
+    border: 2px solid var(--correct-color);
+}
+
+.solution-area.incorrect {
+    background-color: var(--incorrect-bg);
+    border: 2px solid var(--incorrect-color);
+}
+
+.solution-area.neutral {
+    background-color: var(--bg-color);
+    border: 2px solid var(--primary-color);
+}
+
+.solution-status {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.solution-status.status-correct { color: var(--correct-color); }
+.solution-status.status-incorrect { color: var(--incorrect-color); }
+.solution-status.status-neutral { color: var(--primary-color); }
+
+/* Diploma */
+#view-diploma {
+    position: relative;
+    overflow: hidden;
+}
+#confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+.diploma-card {
+    background-color: var(--card-bg);
+    border: 8px solid var(--primary-color);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    position: relative;
+    z-index: 20;
+}
+.diploma-certificate {
+    background-color: var(--bg-color);
+    border: 2px dashed var(--border-dashed);
+    padding: 30px;
+    margin: 30px 0;
+    border-radius: 10px;
+    position: relative;
+}
+.input-group {
+    margin: 20px 0;
+}
+.input-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+.input-group input {
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 1.5rem;
+    text-align: center;
+    border: none;
+    border-bottom: 2px solid var(--primary-color);
+    background: transparent;
+    color: var(--text-color);
+    width: 80%;
+    outline: none;
+}
+.stamp {
+    position: absolute;
+    bottom: -15px;
+    right: -15px;
+    width: 80px;
+    height: 80px;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    transform: rotate(-15deg);
+    border: 4px dashed white;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}

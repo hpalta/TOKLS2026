@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talleres TOK</title>
+    <style>
+        /* CSS_INJECT */
+    </style>
+</head>
+<body>
+    <!-- Selector de materia -->
+    <div id="view-selector" class="view active">
+        <header>
+            <h1>Talleres TOK</h1>
+            <p>¡Elige una aventura para repasar!</p>
+        </header>
+        <main class="subjects-grid" id="subjects-container">
+            <!-- Renderizado dinámicamente -->
+        </main>
+    </div>
+
+    <!-- Cuaderno de preguntas -->
+    <div id="view-notebook" class="view hidden">
+        <header class="notebook-header">
+            <button id="btn-back" class="btn-secondary">← Cambiar de materia</button>
+            <div class="progress-container">
+                <span id="progress-text">0/0</span>
+                <div class="progress-bar-bg">
+                    <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                </div>
+            </div>
+        </header>
+        <main id="question-container" class="question-container">
+            <!-- La pregunta actual se renderiza aquí -->
+        </main>
+        <footer id="question-footer" class="question-footer">
+            <button id="btn-solution" class="btn-primary hidden">Ver solución</button>
+            <div id="solution-area" class="solution-area hidden"></div>
+            <button id="btn-next" class="btn-primary hidden">Siguiente pregunta →</button>
+        </footer>
+    </div>
+
+    <!-- Diploma Final -->
+    <div id="view-diploma" class="view hidden">
+        <canvas id="confetti-canvas"></canvas>
+        <div class="diploma-card">
+            <h1 id="diploma-title">¡Misión Cumplida!</h1>
+            <p id="diploma-text">Has completado todas las preguntas de esta materia.</p>
+            <div class="diploma-certificate">
+                <h2 id="diploma-subject">Materia</h2>
+                <div class="input-group">
+                    <label id="diploma-name-label" for="student-name">Nombre del explorador/a:</label>
+                    <input type="text" id="student-name" placeholder="Escribe tu nombre aquí">
+                </div>
+                <div class="stamp">
+                    <span>TOK</span>
+                </div>
+            </div>
+            <button id="btn-back-diploma" class="btn-secondary">← Cambiar de materia</button>
+        </div>
+    </div>
+
+    <script>
+        /* JS_INJECT */
+    </script>
+</body>
+</html>
