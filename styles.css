@@ -478,6 +478,13 @@ h1 {
     align-items: center;
     gap: 15px;
 }
+.nav-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: center;
+    width: 100%;
+}
 
 .solution-area {
     width: 100%;

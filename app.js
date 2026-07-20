@@ -101,6 +101,10 @@ function init() {
     document.getElementById('btn-back-diploma').addEventListener('click', () => showView('selector'));
     document.getElementById('btn-solution').addEventListener('click', showSolution);
     document.getElementById('btn-next').addEventListener('click', nextQuestion);
+    document.getElementById('btn-prev').addEventListener('click', prevQuestion);
+    
+    // Temporarily hide subject selection and go directly to Science
+    loadSubject('science');
     
     // Confetti logic respects prefers-reduced-motion
     if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -161,8 +165,8 @@ function loadSubject(subject) {
 
 function updateProgress() {
     const total = activeQuestions.length;
-    document.getElementById('progress-text').textContent = `${answeredCount}/${total}`;
-    const percent = total > 0 ? (answeredCount / total) * 100 : 0;
+    document.getElementById('progress-text').textContent = `${currentIndex}/${total}`;
+    const percent = total > 0 ? (currentIndex / total) * 100 : 0;
     document.getElementById('progress-bar-fill').style.width = `${percent}%`;
 }
 
@@ -172,12 +176,19 @@ function renderCurrentQuestion() {
     const footer = document.getElementById('question-footer');
     const btnSolution = document.getElementById('btn-solution');
     const btnNext = document.getElementById('btn-next');
+    const btnPrev = document.getElementById('btn-prev');
     const solutionArea = document.getElementById('solution-area');
     
     container.innerHTML = '';
     solutionArea.className = 'solution-area hidden';
     btnSolution.classList.add('hidden');
     btnNext.classList.add('hidden');
+    
+    if (currentIndex > 0) {
+        btnPrev.classList.remove('hidden');
+    } else {
+        btnPrev.classList.add('hidden');
+    }
     
     if (currentIndex >= activeQuestions.length) {
         showDiploma();
@@ -635,13 +646,24 @@ function showSolution() {
 }
 
 function nextQuestion() {
-    answeredCount++;
     currentIndex++;
-    updateProgress();
-    renderCurrentQuestion();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (currentIndex >= activeQuestions.length) {
+        showDiploma();
+    } else {
+        updateProgress();
+        renderCurrentQuestion();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }
 
+function prevQuestion() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        updateProgress();
+        renderCurrentQuestion();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
 // --- DIPLOMA ---
 function showDiploma() {
     showView('diploma');
