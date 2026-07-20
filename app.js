@@ -97,8 +97,6 @@ function showView(viewName) {
 // --- INITIALIZATION ---
 function init() {
     renderSubjects();
-    document.getElementById('btn-back').addEventListener('click', () => showView('selector'));
-    document.getElementById('btn-back-diploma').addEventListener('click', () => showView('selector'));
     document.getElementById('btn-solution').addEventListener('click', showSolution);
     document.getElementById('btn-next').addEventListener('click', nextQuestion);
     document.getElementById('btn-prev').addEventListener('click', prevQuestion);
