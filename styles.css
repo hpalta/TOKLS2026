@@ -410,6 +410,57 @@ h1 {
     border-color: var(--primary-color);
 }
 
+/* Order Words */
+.order-words-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.order-slots-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 20px;
+    background-color: rgba(0,0,0,0.05);
+    border-radius: 10px;
+    min-height: 80px;
+    align-items: center;
+}
+.order-slot {
+    border-bottom: 2px solid var(--text-color);
+    min-width: 60px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--primary-color);
+    transition: all 0.2s;
+}
+.order-slot:hover {
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 5px;
+}
+.order-slot.filled {
+    border-bottom: 2px solid transparent;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 20px;
+}
+.order-bank-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+.bank-chip {
+    font-size: 1.1rem;
+    padding: 8px 15px;
+}
+
 /* Solution Area */
 .question-footer {
     display: flex;

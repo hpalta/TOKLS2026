@@ -11,6 +11,7 @@ const STR = {
         type_match: "Unir Conceptos",
         type_label: "Etiquetar Imagen",
         type_open: "Pregunta Abierta",
+        type_order_words: "Ordenar Oración",
         badge_case: "Caso de Investigación",
         diploma_title: "¡Misión Cumplida!",
         diploma_text: "Has completado todas las preguntas de esta materia.",
@@ -36,6 +37,7 @@ const STR = {
         type_match: "Match the Concepts",
         type_label: "Label the Picture",
         type_open: "Open Question",
+        type_order_words: "Order the Sentence",
         badge_case: "Investigation Case",
         diploma_title: "Mission Accomplished!",
         diploma_text: "You have completed all the questions for this subject.",
@@ -146,8 +148,9 @@ function loadSubject(subject) {
     document.getElementById('student-name').placeholder = t('name_placeholder');
     document.getElementById('diploma-subject').textContent = t(subject, true);
     
-    // Filter and shuffle
-    activeQuestions = shuffleArray(QUESTIONS_ALL.filter(q => q.subject === subject));
+    // Filter and shuffle, take only 20 questions
+    const subjectQuestions = QUESTIONS_ALL.filter(q => q.subject === subject);
+    activeQuestions = shuffleArray(subjectQuestions).slice(0, 20);
     currentIndex = 0;
     answeredCount = 0;
     
@@ -194,7 +197,8 @@ function renderCurrentQuestion() {
         'multiple': 'type_multiple',
         'match': 'type_match',
         'label': 'type_label',
-        'open': 'type_open'
+        'open': 'type_open',
+        'order_words': 'type_order_words'
     };
     badges.innerHTML += `<span class="badge badge-type">${t(tMap[q.type])}</span>`;
     badges.innerHTML += `<span class="badge badge-station">${q.station}</span>`;
@@ -226,6 +230,8 @@ function renderCurrentQuestion() {
         renderLabel(q, qBody);
     } else if (q.type === 'open') {
         renderOpen(q, qBody);
+    } else if (q.type === 'order_words') {
+        renderOrderWords(q, qBody);
     }
     container.appendChild(qBody);
 }
@@ -448,6 +454,102 @@ function renderOpen(q, container) {
     container.appendChild(ta);
 }
 
+function renderOrderWords(q, container) {
+    const wrap = document.createElement('div');
+    wrap.className = 'order-words-container';
+
+    // Top: empty slots
+    const slotsWrap = document.createElement('div');
+    slotsWrap.className = 'order-slots-wrap';
+    
+    // Bottom: word bank
+    const bankWrap = document.createElement('div');
+    bankWrap.className = 'order-bank-wrap';
+    
+    const words = q.words; // Array of correct words in order
+    const shuffledWords = shuffleArray(words);
+    
+    currentQuestionState.slots = [];
+    currentQuestionState.bankChips = [];
+    currentQuestionState.currentOrder = []; // what user has filled
+    
+    // Build slots
+    words.forEach((_, idx) => {
+        const slot = document.createElement('div');
+        slot.className = 'order-slot';
+        slot.dataset.index = idx;
+        
+        // Allow removing word from slot by clicking it
+        slot.onclick = () => {
+            if (slot.textContent) {
+                const wordObj = currentQuestionState.currentOrder[idx];
+                if (wordObj) {
+                    // Return to bank
+                    wordObj.chip.classList.remove('used');
+                    slot.textContent = '';
+                    slot.classList.remove('filled');
+                    currentQuestionState.currentOrder[idx] = null;
+                }
+            }
+        };
+        currentQuestionState.slots.push(slot);
+        slotsWrap.appendChild(slot);
+        currentQuestionState.currentOrder.push(null);
+    });
+
+    const checkComplete = () => {
+        const allFilled = currentQuestionState.currentOrder.every(x => x !== null);
+        if (allFilled) {
+            // Check correctness
+            let correct = true;
+            for(let i=0; i<words.length; i++){
+                if(currentQuestionState.currentOrder[i].word !== words[i]) correct = false;
+            }
+            currentQuestionState.isCorrect = correct;
+            enableSolution();
+        }
+    };
+
+    // Build Bank
+    shuffledWords.forEach((word) => {
+        const chip = document.createElement('div');
+        chip.className = 'word-chip bank-chip';
+        chip.textContent = word;
+        
+        chip.onclick = () => {
+            if (chip.classList.contains('used')) return; // already in a slot
+            
+            // Find first empty slot
+            const emptyIdx = currentQuestionState.currentOrder.findIndex(x => x === null);
+            if (emptyIdx !== -1) {
+                currentQuestionState.currentOrder[emptyIdx] = { word, chip };
+                currentQuestionState.slots[emptyIdx].textContent = word;
+                currentQuestionState.slots[emptyIdx].classList.add('filled');
+                chip.classList.add('used');
+                
+                checkComplete();
+            }
+        };
+        currentQuestionState.bankChips.push(chip);
+        bankWrap.appendChild(chip);
+    });
+    
+    wrap.appendChild(slotsWrap);
+    wrap.appendChild(bankWrap);
+    container.appendChild(wrap);
+    
+    // Give up button
+    currentQuestionState.giveUpBtn = document.createElement('button');
+    currentQuestionState.giveUpBtn.className = 'btn-secondary';
+    currentQuestionState.giveUpBtn.style.marginTop = '15px';
+    currentQuestionState.giveUpBtn.textContent = "¿Te rendiste? Ver respuesta";
+    currentQuestionState.giveUpBtn.onclick = () => {
+        currentQuestionState.isCorrect = false;
+        enableSolution();
+    };
+    container.appendChild(currentQuestionState.giveUpBtn);
+}
+
 // --- SOLUTION & NEXT ---
 function showSolution() {
     document.getElementById('btn-solution').classList.add('hidden');
@@ -464,7 +566,7 @@ function showSolution() {
             if (b.textContent === q.correctAnswer) b.classList.add('correct-reveal');
             else if (b.classList.contains('selected')) b.classList.add('incorrect-reveal');
         });
-    } else if (q.type === 'match' || q.type === 'label') {
+    } else if (q.type === 'match' || q.type === 'label' || q.type === 'order_words') {
         if(currentQuestionState.giveUpBtn) currentQuestionState.giveUpBtn.classList.add('hidden');
         // Simple reveal text
     }

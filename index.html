@@ -417,6 +417,57 @@ h1 {
     border-color: var(--primary-color);
 }
 
+/* Order Words */
+.order-words-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.order-slots-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 20px;
+    background-color: rgba(0,0,0,0.05);
+    border-radius: 10px;
+    min-height: 80px;
+    align-items: center;
+}
+.order-slot {
+    border-bottom: 2px solid var(--text-color);
+    min-width: 60px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--primary-color);
+    transition: all 0.2s;
+}
+.order-slot:hover {
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 5px;
+}
+.order-slot.filled {
+    border-bottom: 2px solid transparent;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 20px;
+}
+.order-bank-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+.bank-chip {
+    font-size: 1.1rem;
+    padding: 8px 15px;
+}
+
 /* Solution Area */
 .question-footer {
     display: flex;
@@ -1395,10 +1446,18 @@ h1 {
     "id": "eng_9",
     "subject": "english",
     "station": "Routine",
-    "type": "open",
+    "type": "order_words",
     "context": "Think about your afternoon after school.",
-    "prompt": "What time do you do homework?",
-    "explain": "You can answer: 'At four o'clock' or 'At five o'clock'."
+    "prompt": "Order the words to make a sentence:",
+    "words": [
+      "I",
+      "do",
+      "homework",
+      "at",
+      "five",
+      "o'clock."
+    ],
+    "explain": "I do homework at five o'clock."
   },
   {
     "id": "eng_10",
@@ -1529,10 +1588,16 @@ h1 {
     "id": "eng_17",
     "subject": "english",
     "station": "Time",
-    "type": "open",
+    "type": "order_words",
     "context": "Look at a clock showing 10:00.",
-    "prompt": "What time is it?",
-    "explain": "You should write: 'It's ten o'clock.'"
+    "prompt": "Order the words to make the sentence:",
+    "words": [
+      "It",
+      "is",
+      "ten",
+      "o'clock."
+    ],
+    "explain": "It is ten o'clock."
   },
   {
     "id": "eng_18",
@@ -1669,10 +1734,17 @@ h1 {
     "id": "eng_25",
     "subject": "english",
     "station": "Suggestions",
-    "type": "open",
+    "type": "order_words",
     "context": "Your mom asks: 'Do you want to eat some grapes?'",
-    "prompt": "Write an affirmative answer.",
-    "explain": "You can write: 'Yes, please!' or 'Sure, that sounds like fun!'"
+    "prompt": "Order the words to make the answer:",
+    "words": [
+      "Sure,",
+      "that",
+      "sounds",
+      "like",
+      "fun!"
+    ],
+    "explain": "Sure, that sounds like fun!"
   },
   {
     "id": "eng_26",
@@ -1807,10 +1879,18 @@ h1 {
     "id": "eng_34",
     "subject": "english",
     "station": "Food",
-    "type": "open",
+    "type": "order_words",
     "context": "Think about your favorite food.",
-    "prompt": "Write a sentence using 'some' (e.g., I have some...).",
-    "explain": "You can write: 'I have some chicken' or 'I have some juice'."
+    "prompt": "Order the words to make the sentence:",
+    "words": [
+      "I",
+      "have",
+      "some",
+      "chicken",
+      "and",
+      "juice."
+    ],
+    "explain": "I have some chicken and juice."
   },
   {
     "id": "eng_35",
@@ -1932,6 +2012,7 @@ const STR = {
         type_match: "Unir Conceptos",
         type_label: "Etiquetar Imagen",
         type_open: "Pregunta Abierta",
+        type_order_words: "Ordenar Oración",
         badge_case: "Caso de Investigación",
         diploma_title: "¡Misión Cumplida!",
         diploma_text: "Has completado todas las preguntas de esta materia.",
@@ -1957,6 +2038,7 @@ const STR = {
         type_match: "Match the Concepts",
         type_label: "Label the Picture",
         type_open: "Open Question",
+        type_order_words: "Order the Sentence",
         badge_case: "Investigation Case",
         diploma_title: "Mission Accomplished!",
         diploma_text: "You have completed all the questions for this subject.",
@@ -2067,8 +2149,9 @@ function loadSubject(subject) {
     document.getElementById('student-name').placeholder = t('name_placeholder');
     document.getElementById('diploma-subject').textContent = t(subject, true);
     
-    // Filter and shuffle
-    activeQuestions = shuffleArray(QUESTIONS_ALL.filter(q => q.subject === subject));
+    // Filter and shuffle, take only 20 questions
+    const subjectQuestions = QUESTIONS_ALL.filter(q => q.subject === subject);
+    activeQuestions = shuffleArray(subjectQuestions).slice(0, 20);
     currentIndex = 0;
     answeredCount = 0;
     
@@ -2115,7 +2198,8 @@ function renderCurrentQuestion() {
         'multiple': 'type_multiple',
         'match': 'type_match',
         'label': 'type_label',
-        'open': 'type_open'
+        'open': 'type_open',
+        'order_words': 'type_order_words'
     };
     badges.innerHTML += `<span class="badge badge-type">${t(tMap[q.type])}</span>`;
     badges.innerHTML += `<span class="badge badge-station">${q.station}</span>`;
@@ -2147,6 +2231,8 @@ function renderCurrentQuestion() {
         renderLabel(q, qBody);
     } else if (q.type === 'open') {
         renderOpen(q, qBody);
+    } else if (q.type === 'order_words') {
+        renderOrderWords(q, qBody);
     }
     container.appendChild(qBody);
 }
@@ -2369,6 +2455,102 @@ function renderOpen(q, container) {
     container.appendChild(ta);
 }
 
+function renderOrderWords(q, container) {
+    const wrap = document.createElement('div');
+    wrap.className = 'order-words-container';
+
+    // Top: empty slots
+    const slotsWrap = document.createElement('div');
+    slotsWrap.className = 'order-slots-wrap';
+    
+    // Bottom: word bank
+    const bankWrap = document.createElement('div');
+    bankWrap.className = 'order-bank-wrap';
+    
+    const words = q.words; // Array of correct words in order
+    const shuffledWords = shuffleArray(words);
+    
+    currentQuestionState.slots = [];
+    currentQuestionState.bankChips = [];
+    currentQuestionState.currentOrder = []; // what user has filled
+    
+    // Build slots
+    words.forEach((_, idx) => {
+        const slot = document.createElement('div');
+        slot.className = 'order-slot';
+        slot.dataset.index = idx;
+        
+        // Allow removing word from slot by clicking it
+        slot.onclick = () => {
+            if (slot.textContent) {
+                const wordObj = currentQuestionState.currentOrder[idx];
+                if (wordObj) {
+                    // Return to bank
+                    wordObj.chip.classList.remove('used');
+                    slot.textContent = '';
+                    slot.classList.remove('filled');
+                    currentQuestionState.currentOrder[idx] = null;
+                }
+            }
+        };
+        currentQuestionState.slots.push(slot);
+        slotsWrap.appendChild(slot);
+        currentQuestionState.currentOrder.push(null);
+    });
+
+    const checkComplete = () => {
+        const allFilled = currentQuestionState.currentOrder.every(x => x !== null);
+        if (allFilled) {
+            // Check correctness
+            let correct = true;
+            for(let i=0; i<words.length; i++){
+                if(currentQuestionState.currentOrder[i].word !== words[i]) correct = false;
+            }
+            currentQuestionState.isCorrect = correct;
+            enableSolution();
+        }
+    };
+
+    // Build Bank
+    shuffledWords.forEach((word) => {
+        const chip = document.createElement('div');
+        chip.className = 'word-chip bank-chip';
+        chip.textContent = word;
+        
+        chip.onclick = () => {
+            if (chip.classList.contains('used')) return; // already in a slot
+            
+            // Find first empty slot
+            const emptyIdx = currentQuestionState.currentOrder.findIndex(x => x === null);
+            if (emptyIdx !== -1) {
+                currentQuestionState.currentOrder[emptyIdx] = { word, chip };
+                currentQuestionState.slots[emptyIdx].textContent = word;
+                currentQuestionState.slots[emptyIdx].classList.add('filled');
+                chip.classList.add('used');
+                
+                checkComplete();
+            }
+        };
+        currentQuestionState.bankChips.push(chip);
+        bankWrap.appendChild(chip);
+    });
+    
+    wrap.appendChild(slotsWrap);
+    wrap.appendChild(bankWrap);
+    container.appendChild(wrap);
+    
+    // Give up button
+    currentQuestionState.giveUpBtn = document.createElement('button');
+    currentQuestionState.giveUpBtn.className = 'btn-secondary';
+    currentQuestionState.giveUpBtn.style.marginTop = '15px';
+    currentQuestionState.giveUpBtn.textContent = "¿Te rendiste? Ver respuesta";
+    currentQuestionState.giveUpBtn.onclick = () => {
+        currentQuestionState.isCorrect = false;
+        enableSolution();
+    };
+    container.appendChild(currentQuestionState.giveUpBtn);
+}
+
 // --- SOLUTION & NEXT ---
 function showSolution() {
     document.getElementById('btn-solution').classList.add('hidden');
@@ -2385,7 +2567,7 @@ function showSolution() {
             if (b.textContent === q.correctAnswer) b.classList.add('correct-reveal');
             else if (b.classList.contains('selected')) b.classList.add('incorrect-reveal');
         });
-    } else if (q.type === 'match' || q.type === 'label') {
+    } else if (q.type === 'match' || q.type === 'label' || q.type === 'order_words') {
         if(currentQuestionState.giveUpBtn) currentQuestionState.giveUpBtn.classList.add('hidden');
         // Simple reveal text
     }

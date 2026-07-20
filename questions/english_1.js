@@ -123,10 +123,11 @@ module.exports = [
     id: "eng_9",
     subject: "english",
     station: "Routine",
-    type: "open",
+    type: "order_words",
     context: "Think about your afternoon after school.",
-    prompt: "What time do you do homework?",
-    explain: "You can answer: 'At four o'clock' or 'At five o'clock'."
+    prompt: "Order the words to make a sentence:",
+    words: ["I", "do", "homework", "at", "five", "o'clock."],
+    explain: "I do homework at five o'clock."
   },
   {
     id: "eng_10",
@@ -215,10 +216,11 @@ module.exports = [
     id: "eng_17",
     subject: "english",
     station: "Time",
-    type: "open",
+    type: "order_words",
     context: "Look at a clock showing 10:00.",
-    prompt: "What time is it?",
-    explain: "You should write: 'It's ten o'clock.'"
+    prompt: "Order the words to make the sentence:",
+    words: ["It", "is", "ten", "o'clock."],
+    explain: "It is ten o'clock."
   },
   {
     id: "eng_18",

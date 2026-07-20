@@ -65,10 +65,11 @@ module.exports = [
     id: "eng_25",
     subject: "english",
     station: "Suggestions",
-    type: "open",
+    type: "order_words",
     context: "Your mom asks: 'Do you want to eat some grapes?'",
-    prompt: "Write an affirmative answer.",
-    explain: "You can write: 'Yes, please!' or 'Sure, that sounds like fun!'"
+    prompt: "Order the words to make the answer:",
+    words: ["Sure,", "that", "sounds", "like", "fun!"],
+    explain: "Sure, that sounds like fun!"
   },
   {
     id: "eng_26",
@@ -165,10 +166,11 @@ module.exports = [
     id: "eng_34",
     subject: "english",
     station: "Food",
-    type: "open",
+    type: "order_words",
     context: "Think about your favorite food.",
-    prompt: "Write a sentence using 'some' (e.g., I have some...).",
-    explain: "You can write: 'I have some chicken' or 'I have some juice'."
+    prompt: "Order the words to make the sentence:",
+    words: ["I", "have", "some", "chicken", "and", "juice."],
+    explain: "I have some chicken and juice."
   },
   {
     id: "eng_35",
