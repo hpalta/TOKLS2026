@@ -344,5 +344,35 @@ module.exports = [
     options: ["Verdadero", "Falso"],
     correctAnswer: "Verdadero",
     explain: "¡Verdadero! Los bebés tienen muchos huesitos separados por cartílago que luego se fusionan (se pegan) mientras crecemos."
+  },
+  {
+    id: "sci_add_5",
+    subject: "science",
+    station: "Huesos",
+    type: "multiple",
+    context: "En nuestra pierna, debajo de la rodilla, tenemos dos huesos largos que trabajan en equipo.",
+    prompt: "¿Cómo se llaman estos dos huesos y cómo están ubicados?",
+    options: [
+      "La tibia es el hueso interno (la canilla) y el peroné es el externo.",
+      "El fémur es el hueso interno y el radio es el externo.",
+      "El húmero es el hueso interno y la costilla es el externo."
+    ],
+    correctAnswer: "La tibia es el hueso interno (la canilla) y el peroné es el externo.",
+    explain: "¡Muy bien! La tibia es el hueso más grueso que puedes sentir en la parte de adelante de tu pierna (canilla)."
+  },
+  {
+    id: "sci_add_6",
+    subject: "science",
+    station: "Huesos",
+    type: "multiple",
+    context: "En nuestro antebrazo, entre el codo y la muñeca, también tenemos dos huesos que nos permiten girar la mano.",
+    prompt: "¿Cómo podemos saber cuál es el radio y cuál es el cúbito (o ulna)?",
+    options: [
+      "El radio está del lado del dedo pulgar y el cúbito está del lado del dedo meñique.",
+      "El radio está cerca del hombro y el cúbito está en la espalda.",
+      "El radio es el hueso más pequeño del pie y el cúbito es el más grande."
+    ],
+    correctAnswer: "El radio está del lado del dedo pulgar y el cúbito está del lado del dedo meñique.",
+    explain: "¡Exacto! Un truco muy divertido para recordarlo es imaginar que tu dedo pulgar es la 'antena' de un radio."
   }
 ];
