@@ -127,6 +127,7 @@ function renderSubjects() {
 
     for (const [sub, count] of Object.entries(subjectsCount)) {
         if (sub === 'english') continue; // Ocultar inglés como se solicitó
+        if (sub === 'matematica') continue; // Ocultar matemáticas temporalmente
 
         const card = document.createElement('div');
         card.className = `subject-card ${sub}`;
