@@ -20,12 +20,14 @@ const STR = {
         subjects: {
             science: "Ciencias Naturales",
             english: "Inglés",
-            sociales: "Sociales"
+            sociales: "Sociales",
+            matematica: "Matemáticas"
         },
         desc: {
             science: "Huesos, músculos y nuestro cuerpo",
             english: "My Day & Fantastic Food",
-            sociales: "Recursos y Cuidado del Entorno"
+            sociales: "Recursos y Cuidado del Entorno",
+            matematica: "Medidas, geometría y datos"
         }
     },
     en: {
