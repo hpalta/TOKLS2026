@@ -194,8 +194,14 @@ module.exports = [
   },
   {
     id: "mat_23", subject: "matematica", station: "Perímetro", type: "multiple",
-    context: "Tienes una tarjeta en forma de triángulo. Un lado mide 3 cm, el otro lado mide 4 cm y el último lado mide 5 cm.",
+    context: "Tienes una tarjeta en forma de triángulo.",
     prompt: "¿Cuál es el perímetro total de este triángulo?",
+    illustration: `<svg viewBox="0 0 200 150" width="200" height="150">
+      <polygon points="100,20 40,120 160,120" fill="#FFE5B4" stroke="#FF8C00" stroke-width="4"/>
+      <text x="50" y="65" font-family="Arial" font-size="14" fill="#000" font-weight="bold">3 cm</text>
+      <text x="125" y="65" font-family="Arial" font-size="14" fill="#000" font-weight="bold">5 cm</text>
+      <text x="100" y="140" font-family="Arial" font-size="14" fill="#000" font-weight="bold" text-anchor="middle">4 cm</text>
+    </svg>`,
     options: ["12 cm", "7 cm", "20 cm"],
     correctAnswer: "12 cm",
     explain: "¡Super! 3 + 4 + 5 = 12 cm. ¡Sumaste todos los bordes correctamente!"
@@ -229,8 +235,12 @@ module.exports = [
   },
   {
     id: "mat_27", subject: "matematica", station: "Perímetro", type: "multiple",
-    context: "Tienes una figura muy rara que parece una estrella. Tiene 10 lados y cada ladito mide 1 centímetro.",
+    context: "Tienes una figura muy rara que parece una estrella. ¡Tiene 10 lados iguales!",
     prompt: "¿Cuál será su perímetro?",
+    illustration: `<svg viewBox="0 0 150 150" width="150" height="150">
+      <polygon points="75,10 90,50 135,50 100,75 110,120 75,95 40,120 50,75 15,50 60,50" fill="#E6E6FA" stroke="#8A2BE2" stroke-width="3"/>
+      <text x="35" y="40" font-family="Arial" font-size="12" fill="#000" font-weight="bold">1 cm</text>
+    </svg>`,
     options: ["10 centímetros", "1 centímetro", "100 centímetros"],
     correctAnswer: "10 centímetros",
     explain: "¡Muy bien! Sumaste el número 1 un total de 10 veces."
@@ -248,8 +258,15 @@ module.exports = [
   },
   {
     id: "mat_29", subject: "matematica", station: "Perímetro", type: "multiple",
-    context: "Camilo tiene un cuadrado gigante. Cada lado del cuadrado mide 1 metro completo.",
+    context: "Camilo tiene un cuadrado gigante.",
     prompt: "¿Cuál es el perímetro del cuadrado de Camilo?",
+    illustration: `<svg viewBox="0 0 150 150" width="150" height="150">
+      <rect x="25" y="25" width="100" height="100" fill="#E0FFFF" stroke="#00CED1" stroke-width="4"/>
+      <text x="75" y="15" font-family="Arial" font-size="14" fill="#000" font-weight="bold" text-anchor="middle">1 metro</text>
+      <text x="75" y="142" font-family="Arial" font-size="14" fill="#000" font-weight="bold" text-anchor="middle">1 metro</text>
+      <text x="12" y="80" font-family="Arial" font-size="14" fill="#000" font-weight="bold" text-anchor="middle" transform="rotate(-90, 12, 80)">1 metro</text>
+      <text x="138" y="80" font-family="Arial" font-size="14" fill="#000" font-weight="bold" text-anchor="middle" transform="rotate(90, 138, 80)">1 metro</text>
+    </svg>`,
     options: ["4 metros", "1 metro", "10 metros"],
     correctAnswer: "4 metros",
     explain: "¡Exacto! El cuadrado tiene 4 lados iguales. 1 + 1 + 1 + 1 = 4 metros."
@@ -301,8 +318,21 @@ module.exports = [
   },
   {
     id: "mat_35", subject: "matematica", station: "Tablas y Gráficos", type: "multiple",
-    context: "En un gráfico de barras, la barra de 'Gatos' es más alta que la barra de 'Perros'.",
-    prompt: "¿Qué significa eso?",
+    context: "Analiza el siguiente gráfico de barras sobre mascotas favoritas.",
+    prompt: "¿Qué significa que la barra de los Gatos sea más alta que la barra de los Perros?",
+    illustration: `<svg viewBox="0 0 200 150" width="200" height="150">
+      <!-- Ejes -->
+      <line x1="30" y1="10" x2="30" y2="120" stroke="#000" stroke-width="2"/>
+      <line x1="30" y1="120" x2="180" y2="120" stroke="#000" stroke-width="2"/>
+      <!-- Barras -->
+      <rect x="50" y="40" width="40" height="80" fill="#FF69B4" rx="3"/>
+      <rect x="110" y="70" width="40" height="50" fill="#87CEFA" rx="3"/>
+      <!-- Etiquetas -->
+      <text x="70" y="140" font-family="Arial" font-size="12" fill="#000" text-anchor="middle">Gatos</text>
+      <text x="130" y="140" font-family="Arial" font-size="12" fill="#000" text-anchor="middle">Perros</text>
+      <text x="20" y="50" font-family="Arial" font-size="10" fill="#000" text-anchor="end">10</text>
+      <text x="20" y="80" font-family="Arial" font-size="10" fill="#000" text-anchor="end">5</text>
+    </svg>`,
     options: ["Que a más personas les gustan los gatos", "Que los gatos son más altos", "Que hay un error en el gráfico"],
     correctAnswer: "Que a más personas les gustan los gatos",
     explain: "¡Exacto! En un diagrama de barras, la barra más alta es la que tuvo mayor frecuencia (más votos)."
@@ -325,8 +355,18 @@ module.exports = [
   },
   {
     id: "mat_38", subject: "matematica", station: "Tablas y Gráficos", type: "match",
-    context: "Viendo un gráfico del zoológico, la barra de Leones está en el número 15 y la de Monos en el número 30.",
-    prompt: "Analiza el gráfico:",
+    context: "Analiza el siguiente gráfico de barras del zoológico.",
+    prompt: "Relaciona correctamente según el dibujo:",
+    illustration: `<svg viewBox="0 0 200 150" width="200" height="150">
+      <line x1="30" y1="10" x2="30" y2="120" stroke="#000" stroke-width="2"/>
+      <line x1="30" y1="120" x2="180" y2="120" stroke="#000" stroke-width="2"/>
+      <rect x="50" y="70" width="40" height="50" fill="#FFA500" rx="2"/>
+      <rect x="110" y="20" width="40" height="100" fill="#32CD32" rx="2"/>
+      <text x="70" y="140" font-family="Arial" font-size="12" fill="#000" text-anchor="middle">Leones</text>
+      <text x="130" y="140" font-family="Arial" font-size="12" fill="#000" text-anchor="middle">Monos</text>
+      <text x="25" y="30" font-family="Arial" font-size="10" fill="#000" text-anchor="end">30</text>
+      <text x="25" y="80" font-family="Arial" font-size="10" fill="#000" text-anchor="end">15</text>
+    </svg>`,
     pairs: [
       { id: "m38_1", left: "Cantidad de Leones", right: "15" },
       { id: "m38_2", left: "Cantidad de Monos", right: "30" },

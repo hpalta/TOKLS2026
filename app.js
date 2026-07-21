@@ -234,6 +234,13 @@ function renderCurrentQuestion() {
     prompt.textContent = q.prompt;
     container.appendChild(prompt);
     
+    if (q.illustration) {
+        const ill = document.createElement('div');
+        ill.className = 'question-illustration';
+        ill.innerHTML = q.illustration;
+        container.appendChild(ill);
+    }
+    
     // Delegate rendering
     const qBody = document.createElement('div');
     if (q.type === 'true_false' || q.type === 'multiple') {

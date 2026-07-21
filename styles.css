@@ -587,3 +587,21 @@ h1 {
     border: 4px dashed white;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
 }
+
+/* Illustration Area */
+.question-illustration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+.question-illustration svg {
+    max-width: 100%;
+    height: auto;
+    max-height: 250px;
+}
+
