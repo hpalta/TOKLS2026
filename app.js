@@ -19,11 +19,13 @@ const STR = {
         name_placeholder: "Escribe tu nombre aquí",
         subjects: {
             science: "Ciencias Naturales",
-            english: "Inglés"
+            english: "Inglés",
+            sociales: "Sociales"
         },
         desc: {
             science: "Huesos, músculos y nuestro cuerpo",
-            english: "My Day & Fantastic Food"
+            english: "My Day & Fantastic Food",
+            sociales: "Recursos y Cuidado del Entorno"
         }
     },
     en: {
@@ -97,12 +99,11 @@ function showView(viewName) {
 // --- INITIALIZATION ---
 function init() {
     renderSubjects();
+    document.getElementById('btn-back').addEventListener('click', () => showView('selector'));
+    document.getElementById('btn-back-diploma').addEventListener('click', () => showView('selector'));
     document.getElementById('btn-solution').addEventListener('click', showSolution);
     document.getElementById('btn-next').addEventListener('click', nextQuestion);
     document.getElementById('btn-prev').addEventListener('click', prevQuestion);
-    
-    // Temporarily hide subject selection and go directly to Science
-    loadSubject('science');
     
     // Confetti logic respects prefers-reduced-motion
     if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -123,6 +124,8 @@ function renderSubjects() {
     });
 
     for (const [sub, count] of Object.entries(subjectsCount)) {
+        if (sub === 'english') continue; // Ocultar inglés como se solicitó
+
         const card = document.createElement('div');
         card.className = `subject-card ${sub}`;
         // Using Spanish for selector as requested
@@ -141,6 +144,7 @@ function loadSubject(subject) {
     // English subject means English UI, otherwise Spanish
     currentLang = (subject === 'english') ? 'en' : 'es';
     
+    document.getElementById('btn-back').textContent = t('back');
     document.getElementById('btn-solution').textContent = t('see_solution');
     document.getElementById('btn-next').textContent = t('next');
     document.getElementById('diploma-title').textContent = t('diploma_title');
